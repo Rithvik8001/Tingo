@@ -1,4 +1,5 @@
 
+
 import SwiftUI
 
 struct ListRowView: View {
@@ -6,7 +7,7 @@ struct ListRowView: View {
 	let item: ItemModel
 	
 	var body: some View {
-		HStack {
+		HStack(spacing: 12) {
 			Image(systemName: item.isCompleted ? "checkmark.circle" : "circle")
 				.foregroundStyle(item.isCompleted ? .green : .red)
 			Text(item.title)
