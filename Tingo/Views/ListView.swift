@@ -3,27 +3,24 @@ import SwiftUI
 
 struct ListView: View {
 	
-	@State var todoItems: [String] = [
-		"This is todo item 1",
-		"This is todo item 2",
-		"This is todo item 3",
-		"This is todo item 4"
+	@State var todoItems: [ItemModel] = [
+		ItemModel(title: "This is First Todo" , isCompleted: false),
+		ItemModel(title: "This is Second Todo" , isCompleted: true),
+		ItemModel(title: "This is Third Todo" , isCompleted: false),
+		ItemModel(title: "This is Four Todo" , isCompleted: true)
 	]
+	
     var body: some View {
 			NavigationStack {
 				List {
-					ForEach(todoItems, id: \.self) { todo in
-						HStack {
-							Image(systemName: "checkmark.circle")
-							Text(todo)
-						}
-						.padding(.vertical,7)
+					ForEach(todoItems) { todo in
+						ListRowView(item: todo)
 					}
 				}
+				.listStyle(InsetGroupedListStyle())
 				.navigationTitle("Todos")
-				.navigationBarItems(leading: EditButton())
+				.navigationBarItems(leading: EditButton(), trailing: NavigationLink("Add", destination: AddTodoView()))
 			}
-			.frame(maxHeight: .infinity)
     }
 }
 
