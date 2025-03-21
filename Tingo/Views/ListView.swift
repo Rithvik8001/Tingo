@@ -3,17 +3,12 @@ import SwiftUI
 
 struct ListView: View {
 	
-	@State var todoItems: [ItemModel] = [
-		ItemModel(title: "This is First Todo" , isCompleted: false),
-		ItemModel(title: "This is Second Todo" , isCompleted: true),
-		ItemModel(title: "This is Third Todo" , isCompleted: false),
-		ItemModel(title: "This is Four Todo" , isCompleted: true)
-	]
+	@EnvironmentObject var listViewModel: ListViewModel
 	
 	var body: some View {
 		NavigationStack {
 			List {
-				ForEach(todoItems) { todo in
+				ForEach(listViewModel.todoItems) { todo in
 					ListRowView(item: todo)
 						.listRowSeparator(.hidden)
 						.listRowBackground(Color.clear)
@@ -25,6 +20,12 @@ struct ListView: View {
 								trailing: 10
 							)
 						)
+				}
+				.onDelete { IndexSet in
+					listViewModel.deleteTodo(indexSet: IndexSet)
+				}
+				.onMove { IndexSet, Int in
+					listViewModel.moveTodo(from: IndexSet, to: Int)
 				}
 			}
 			.listStyle(PlainListStyle())
@@ -50,5 +51,6 @@ struct ListView: View {
 	NavigationStack {
 		ListView()
 	}
+	.environmentObject(ListViewModel())
 	
 }

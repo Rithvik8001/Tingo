@@ -1,14 +1,17 @@
 
-
 import SwiftUI
 
 @main
 struct TingoApp: App {
-    var body: some Scene {
-        WindowGroup {
-					NavigationStack {
-						ListView()
-					}
-        }
-    }
+	
+	@StateObject var listViewModel: ListViewModel = ListViewModel()
+	
+	var body: some Scene {
+		WindowGroup {
+			NavigationStack {
+				ListView()
+			}
+			.environmentObject(listViewModel)
+		}
+	}
 }
