@@ -20,6 +20,11 @@ struct ListView: View {
 								trailing: 10
 							)
 						)
+						.onTapGesture {
+							withAnimation(.easeInOut(duration: 0.4)) {
+								listViewModel.todoComplete(item: todo)
+							}
+						}
 				}
 				.onDelete { IndexSet in
 					listViewModel.deleteTodo(indexSet: IndexSet)

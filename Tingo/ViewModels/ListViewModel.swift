@@ -3,27 +3,51 @@ import Foundation
 
 class ListViewModel: ObservableObject {
 	
-	@Published var todoItems: [ItemModel] = []
+	@Published var todoItems: [ItemModel] = [] {
+		didSet {
+			saveItems()
+		}
+	}
+	
+	let todoItemsKey: String = "todoItems_list"
+	
+	
 	
 	init() {
 		getItems()
 	}
 	
 	func getItems() {
-		let newItems = [
-			ItemModel(title: "This is First Todo" , isCompleted: false),
-			ItemModel(title: "This is Second Todo" , isCompleted: true),
-			ItemModel(title: "This is Third Todo" , isCompleted: false),
-			ItemModel(title: "This is Four Todo" , isCompleted: true)
-		]
-		todoItems.append(contentsOf: newItems)
+		guard
+			let data = UserDefaults.standard.data(forKey: todoItemsKey),
+			let decodedData = try? JSONDecoder().decode([ItemModel].self, from: data)
+		else {return}
 		
+		self.todoItems = decodedData
 	}
+	
 	func deleteTodo(indexSet: IndexSet) {
 		todoItems.remove(atOffsets: indexSet)
 	}
 	
 	func moveTodo(from: IndexSet, to: Int){
 		todoItems.move(fromOffsets: from, toOffset: to)
+	}
+	
+	func addTodo(title:String) {
+		let newItem = ItemModel(title: title, isCompleted: false)
+		todoItems.append(newItem)
+	}
+	
+	func todoComplete(item: ItemModel) {
+		if let index = todoItems.firstIndex(where: {$0.id == item.id}) {
+			todoItems[index] = item.updateCompletion()
+		}
+	}
+	
+	func saveItems() {
+		if let encodedData = try? JSONEncoder().encode(todoItems) {
+			UserDefaults.standard.set(encodedData, forKey: todoItemsKey)
+		}
 	}
 }
